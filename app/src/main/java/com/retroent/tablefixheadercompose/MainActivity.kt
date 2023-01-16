@@ -12,9 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.retroent.tablefixheadercompose.ui.theme.TableFIxHeaderComposeTheme
@@ -46,37 +48,50 @@ private fun drawUi() {
 
     val headers = arrayListOf("Fix header")
 
-    for(i in 1..10){
+    for (i in 1..10) {
         headers.add("H $i")
     }
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
+            .padding(5.dp)
     ) {
         val scroller = rememberScrollState()
         val headerScroller: ScrollState by remember { mutableStateOf(scroller) }
         val firstHeader = headers.removeAt(0)
         Row(
             modifier = Modifier
-                .background(Color.Gray)
+                .padding(1.dp)
+                .background(Color.Gray),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.Center
+
         ) {
             Text(
                 modifier = Modifier
                     .height(40.dp)
-                    .width(80.dp),
-                text = firstHeader
+                    .width(80.dp)
+                    .border(1.dp, Color.Black, RectangleShape)
+                    .wrapContentHeight(Alignment.CenterVertically),
+                text = firstHeader,
+
             )
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .horizontalScroll(headerScroller)
+
             ) {
                 headers.forEach {
                     Text(
-                        modifier = cellModifier.height(40.dp)
-                            .width(80.dp),
-                        text = it
+                        modifier = cellModifier
+                            .height(40.dp)
+                            .width(80.dp)
+                            .border(1.dp, Color.Black, RectangleShape)
+                            .wrapContentHeight(Alignment.CenterVertically),
+                        text = it,
+                        textAlign = TextAlign.Center
                     )
                 }
             }
@@ -93,10 +108,9 @@ private fun drawUi() {
                         delta
                     })
                 )*/
-                .padding(2.dp)
         ) {
             repeat(30) {
-                createHorCell(it,scroller)
+                createHorCell(it, scroller)
             }
         }
 
@@ -109,20 +123,21 @@ private fun createHorCell(row: Int, scroller: ScrollState) {
         Text(
             modifier = cellModifier
                 .width(80.dp),
-            text = "R $row"
+            text = "R $row",
+            textAlign = TextAlign.Center
         )
         Row(
             Modifier
-                .fillMaxWidth()
                 .fillMaxHeight()
                 .horizontalScroll(scroller)
-        ){
-            repeat(10) { col->
+        ) {
+            repeat(10) { col ->
                 println("Row $col")
                 Text(
                     modifier = cellModifier
                         .width(80.dp),
-                    text = "C $row-$col"
+                    text = "C $row-$col",
+                    textAlign = TextAlign.Center
                 )
             }
         }
