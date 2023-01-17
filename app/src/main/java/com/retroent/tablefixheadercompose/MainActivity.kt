@@ -14,6 +14,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.style.TextAlign
@@ -39,9 +40,7 @@ class MainActivity : ComponentActivity() {
 }
 
 val cellModifier = Modifier
-    .padding(2.dp)
     .border(1.dp, Color.Gray, RectangleShape)
-    .padding(1.dp)
 
 @Composable
 private fun drawUi() {
@@ -53,9 +52,8 @@ private fun drawUi() {
     }
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .padding(5.dp)
+            .fillMaxSize()
+            .padding(end = 1.dp)
     ) {
         val scroller = rememberScrollState()
         val headerScroller: ScrollState by remember { mutableStateOf(scroller) }
@@ -85,7 +83,7 @@ private fun drawUi() {
             ) {
                 headers.forEach {
                     Text(
-                        modifier = cellModifier
+                        modifier = Modifier
                             .height(40.dp)
                             .width(80.dp)
                             .border(1.dp, Color.Black, RectangleShape)
@@ -98,8 +96,8 @@ private fun drawUi() {
         }
         Column(
             modifier = Modifier
-                .fillMaxWidth()
                 .fillMaxHeight()
+                .width(IntrinsicSize.Min)
                 .verticalScroll(ScrollState(0))
                 /*.scrollable(
                     orientation = Orientation.Horizontal,
@@ -122,14 +120,13 @@ private fun createHorCell(row: Int, scroller: ScrollState) {
     Row {
         Text(
             modifier = cellModifier
-                .width(80.dp),
+                .width(80.dp)
+                .shadow(elevation = 10.dp),
             text = "R $row",
             textAlign = TextAlign.Center
         )
         Row(
-            Modifier
-                .fillMaxHeight()
-                .horizontalScroll(scroller)
+            Modifier.horizontalScroll(scroller)
         ) {
             repeat(10) { col ->
                 println("Row $col")
@@ -143,6 +140,7 @@ private fun createHorCell(row: Int, scroller: ScrollState) {
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
