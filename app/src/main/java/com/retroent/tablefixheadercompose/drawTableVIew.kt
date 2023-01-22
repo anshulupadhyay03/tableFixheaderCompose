@@ -37,6 +37,7 @@ fun drawUi(
         //This might seem crazy
 
         LaunchedEffect(stateRowX.firstVisibleItemScrollOffset) {
+            if(stateRowY.isScrollInProgress.not())
             stateRowY.scrollToItem(
                 stateRowX.firstVisibleItemIndex,
                 stateRowX.firstVisibleItemScrollOffset
@@ -44,6 +45,7 @@ fun drawUi(
         }
 
         LaunchedEffect(stateRowY.firstVisibleItemScrollOffset) {
+            if(stateRowX.isScrollInProgress.not())
             stateRowX.scrollToItem(
                 stateRowY.firstVisibleItemIndex,
                 stateRowY.firstVisibleItemScrollOffset
@@ -93,7 +95,6 @@ private fun createHeaderRow(
                     .width(80.dp)
                     .zIndex(15f)
                     .background(Color.LightGray)
-                    .border(1.dp, Color.Black, RectangleShape)
                     .wrapContentHeight(Alignment.CenterVertically),
                 text = firstHeader
             )
