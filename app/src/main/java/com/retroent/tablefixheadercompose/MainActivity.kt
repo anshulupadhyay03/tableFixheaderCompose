@@ -22,6 +22,7 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     SetUp()
+                    //DUME()
                 }
             }
         }
@@ -44,9 +45,9 @@ fun SetUp() {
         }
         rowColumns[rowKey] = listofCols
     }
+    val firstHeader = headers.removeAt(0)
 
-
-    drawUi(headers = headers, rowColumns)
+    drawUi(firstHeader,headers = headers, rowColumns)
 
 }
 
