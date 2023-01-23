@@ -32,15 +32,15 @@ class MainActivity : ComponentActivity() {
 @Composable
 fun SetUp() {
     val headers = arrayListOf("Fix header")
-    for (i in 1..10) {
+    for (i in 1..20) {
         headers.add("H $i")
     }
 
     val rowColumns = mutableMapOf<String,ArrayList<String>>()
-    repeat(1000){ row->
+    repeat(100){ row->
         val rowKey = "Row$row"
         val listofCols = arrayListOf<String>()
-        repeat(10){ col->
+        repeat(20){ col->
             listofCols.add("Col$row-$col")
         }
         rowColumns[rowKey] = listofCols

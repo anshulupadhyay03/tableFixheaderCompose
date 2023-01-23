@@ -23,36 +23,32 @@ fun drawUi(
     headers: MutableList<String>,
     rowColumns: MutableMap<String, ArrayList<String>>
 ) {
-    val stateRowX = rememberLazyListState() // State for the first Row, X
-    val stateRowY = rememberLazyListState() // State for the second Row, Y
-
+    val bodyListState = rememberLazyListState() // State for the first Row, X
+    val headerListState = rememberLazyListState() // State for the second Row, Y
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(end = 1.dp)
     ) {
-        createHeaderRow(firstHeader,headers,stateRowY)
-        createBodyRow(rowColumns,stateRowX)
-
-        //This might seem crazy
-
-        LaunchedEffect(stateRowX.firstVisibleItemScrollOffset) {
-            if(stateRowY.isScrollInProgress.not())
-            stateRowY.scrollToItem(
-                stateRowX.firstVisibleItemIndex,
-                stateRowX.firstVisibleItemScrollOffset
-            )
-        }
-
-        LaunchedEffect(stateRowY.firstVisibleItemScrollOffset) {
-            if(stateRowX.isScrollInProgress.not())
-            stateRowX.scrollToItem(
-                stateRowY.firstVisibleItemIndex,
-                stateRowY.firstVisibleItemScrollOffset
-            )
-        }
-
+        createHeaderRow(firstHeader,headers,headerListState)
+        createBodyRow(rowColumns,bodyListState)
     }
+
+    LaunchedEffect(bodyListState.firstVisibleItemScrollOffset) {
+        if(!headerListState.isScrollInProgress)
+            headerListState.scrollToItem(
+                bodyListState.firstVisibleItemIndex,
+                bodyListState.firstVisibleItemScrollOffset
+            )
+    }
+    LaunchedEffect(headerListState.firstVisibleItemScrollOffset) {
+        if(!bodyListState.isScrollInProgress)
+            bodyListState.scrollToItem(
+                headerListState.firstVisibleItemIndex,
+                headerListState.firstVisibleItemScrollOffset
+            )
+    }
+
 }
 
 @Composable
