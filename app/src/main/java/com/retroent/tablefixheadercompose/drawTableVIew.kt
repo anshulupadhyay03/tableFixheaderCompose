@@ -80,8 +80,7 @@ private fun <H> CreateHeaderRow(
 ) {
     LazyRow(
         modifier = Modifier
-            .padding(1.dp)
-            .background(Color.Gray),
+            .background(Color.LightGray),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center,
         state = listState,

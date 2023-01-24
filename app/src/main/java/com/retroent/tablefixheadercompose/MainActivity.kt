@@ -3,6 +3,7 @@ package com.retroent.tablefixheadercompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -14,6 +15,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -46,7 +49,7 @@ fun SetUp() {
     }
 
     val rowColumns = mutableMapOf<String, ArrayList<String>>()
-    repeat(100) { row ->
+    repeat(1000) { row ->
         val rowKey = "Row$row"
         val listofCols = arrayListOf<String>()
         repeat(20) { col ->
@@ -60,21 +63,32 @@ fun SetUp() {
         headers,
         rowColumns,
         fixedHeaderView = {
-            Text(
+            /*Text(
                 modifier = Modifier
                     .height(40.dp)
                     .width(80.dp)
                     .zIndex(15f)
-                    .background(Color.LightGray)
+                    .background(Color.Yellow)
                     .wrapContentHeight(Alignment.CenterVertically),
                 text = firstHeader
-            )
+            )*/
+                          Image(
+                              modifier = Modifier
+                                  .height(40.dp)
+                                  .width(80.dp)
+                                  .zIndex(15f),
+                              contentScale = ContentScale.Crop,
+                              painter = painterResource(id = R.drawable.bg),
+                              contentDescription = null
+                          )
         },
         headerView = {
             Text(
                 modifier = Modifier
                     .height(40.dp)
                     .width(80.dp)
+                    .padding(1.dp)
+
                     .border(1.dp, Color.Black, RectangleShape)
                     .wrapContentHeight(Alignment.CenterVertically),
                 text = it,
