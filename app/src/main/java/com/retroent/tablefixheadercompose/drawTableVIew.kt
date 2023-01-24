@@ -4,24 +4,24 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 
 val cellModifier = Modifier
     .border(1.dp, Color.Gray, RectangleShape)
 
 @Composable
-fun drawUi(
-    firstHeader: String,
-    headers: MutableList<String>,
-    rowColumns: MutableMap<String, ArrayList<String>>
+fun <H,R,C> DrawTableUi(
+    headers: MutableList<H>,
+    rowColumns: MutableMap<R, ArrayList<C>>,
+    fixedHeaderView: @Composable () -> Unit,
+    headerView : @Composable (header:H) -> Unit,
+    fixedBodyView : @Composable (fixedBody:R) -> Unit,
+    bodyView : @Composable (columns:C) -> Unit
 ) {
     val bodyListState = rememberLazyListState() // State for the first Row, X
     val headerListState = rememberLazyListState() // State for the second Row, Y
@@ -30,19 +30,19 @@ fun drawUi(
             .fillMaxSize()
             .padding(end = 1.dp)
     ) {
-        createHeaderRow(firstHeader,headers,headerListState)
-        createBodyRow(rowColumns,bodyListState)
+        CreateHeaderRow(headers, headerListState,fixedHeaderView,headerView)
+        CreateBodyRow(rowColumns, bodyListState,fixedBodyView,bodyView)
     }
 
     LaunchedEffect(bodyListState.firstVisibleItemScrollOffset) {
-        if(!headerListState.isScrollInProgress)
+        if (!headerListState.isScrollInProgress)
             headerListState.scrollToItem(
                 bodyListState.firstVisibleItemIndex,
                 bodyListState.firstVisibleItemScrollOffset
             )
     }
     LaunchedEffect(headerListState.firstVisibleItemScrollOffset) {
-        if(!bodyListState.isScrollInProgress)
+        if (!bodyListState.isScrollInProgress)
             bodyListState.scrollToItem(
                 headerListState.firstVisibleItemIndex,
                 headerListState.firstVisibleItemScrollOffset
@@ -52,9 +52,11 @@ fun drawUi(
 }
 
 @Composable
-private fun createBodyRow(
-    rowColumns: MutableMap<String, ArrayList<String>>,
-    listState: LazyListState
+private fun <R,C> CreateBodyRow(
+    rowColumns: MutableMap<R, ArrayList<C>>,
+    listState: LazyListState,
+    fixedBodyView: @Composable (fixedBody: R) -> Unit,
+    bodyView: @Composable (columns: C) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -62,7 +64,7 @@ private fun createBodyRow(
     ) {
         rowColumns.forEach { (key, value) ->
             item {
-                createHorCell(row = key, value,listState)
+                CreateBodyCells(row = key, value, listState,fixedBodyView,bodyView)
             }
         }
     }
@@ -70,10 +72,11 @@ private fun createBodyRow(
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun createHeaderRow(
-    firstHeader: String,
-    headers: MutableList<String>,
-    listState: LazyListState
+private fun <H> CreateHeaderRow(
+    headers: MutableList<H>,
+    listState: LazyListState,
+    fixedHeaderView: @Composable () -> Unit,
+    headerView: @Composable (what:H) -> Unit
 ) {
     LazyRow(
         modifier = Modifier
@@ -83,58 +86,30 @@ private fun createHeaderRow(
         horizontalArrangement = Arrangement.Center,
         state = listState,
 
-    ) {
+        ) {
         stickyHeader {
-            Text(
-                modifier = Modifier
-                    .height(40.dp)
-                    .width(80.dp)
-                    .zIndex(15f)
-                    .background(Color.LightGray)
-                    .wrapContentHeight(Alignment.CenterVertically),
-                text = firstHeader
-            )
+            fixedHeaderView()
         }
         items(headers) {
-            Text(
-                modifier = Modifier
-                    .height(40.dp)
-                    .width(80.dp)
-                    .border(1.dp, Color.Black, RectangleShape)
-                    .wrapContentHeight(Alignment.CenterVertically),
-                text = it,
-                textAlign = TextAlign.Center
-            )
+            headerView(it)
         }
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-private fun createHorCell(
-    row: String,
-    collist: ArrayList<String>,
-    listState: LazyListState
+private fun <R,C>CreateBodyCells(
+    row: R,
+    collist: ArrayList<C>,
+    listState: LazyListState,
+    fixedBodyView: @Composable (fixedBody: R) -> Unit,
+    bodyView: @Composable (columns: C) -> Unit
 ) {
 
-    Row() {
-        Text(
-            modifier = cellModifier
-                .width(80.dp)
-                .zIndex(15f)
-                .background(Color.LightGray),
-            text = row,
-            textAlign = TextAlign.Center
-        )
-
+    Row {
+        fixedBodyView(row)
         LazyRow(state = listState) {
             items(collist) {
-                Text(
-                    modifier = cellModifier
-                        .width(80.dp),
-                    text = it,
-                    textAlign = TextAlign.Center
-                )
+                bodyView(it)
             }
         }
     }
