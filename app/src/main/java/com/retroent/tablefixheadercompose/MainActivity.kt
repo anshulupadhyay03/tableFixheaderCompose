@@ -3,7 +3,6 @@ package com.retroent.tablefixheadercompose
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -15,8 +14,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,6 +23,7 @@ import com.retroent.tablefixheadercompose.ui.theme.TableFIxHeaderComposeTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         setContent {
             TableFIxHeaderComposeTheme {
                 // A surface container using the 'background' color from the theme
@@ -34,7 +32,6 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     SetUp()
-                    //DUME()
                 }
             }
         }
@@ -49,7 +46,7 @@ fun SetUp() {
     }
 
     val rowColumns = mutableMapOf<String, ArrayList<String>>()
-    repeat(1000) { row ->
+    repeat(500) { row ->
         val rowKey = "Row$row"
         val listofCols = arrayListOf<String>()
         repeat(20) { col ->
@@ -63,7 +60,7 @@ fun SetUp() {
         headers,
         rowColumns,
         fixedHeaderView = {
-            /*Text(
+            Text(
                 modifier = Modifier
                     .height(40.dp)
                     .width(80.dp)
@@ -71,16 +68,16 @@ fun SetUp() {
                     .background(Color.Yellow)
                     .wrapContentHeight(Alignment.CenterVertically),
                 text = firstHeader
+            )
+           /* Image(
+                modifier = Modifier
+                    .height(40.dp)
+                    .width(80.dp)
+                    .zIndex(15f),
+                contentScale = ContentScale.Crop,
+                painter = painterResource(id = R.drawable.bg),
+                contentDescription = null
             )*/
-                          Image(
-                              modifier = Modifier
-                                  .height(40.dp)
-                                  .width(80.dp)
-                                  .zIndex(15f),
-                              contentScale = ContentScale.Crop,
-                              painter = painterResource(id = R.drawable.bg),
-                              contentDescription = null
-                          )
         },
         headerView = {
             Text(
@@ -114,7 +111,6 @@ fun SetUp() {
             )
         }
     )
-
 }
 
 @Preview(showBackground = true)
